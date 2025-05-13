@@ -65,62 +65,85 @@ A fun and educational web application that challenges users to identify countrie
 
 ```
 
+5. **Start the server**
+``` bash
+    node app.js
+```
+
+6. **Visit the app**
+    Open your browser and go to:
+    http://localhost:3000
+
+## 📷 Screenshot
+    ![Screenshot](Screenshot.png)
+
+## 👨‍💻 Author
+    Pawan Sanklapa
+    Full Stack Developer in Training
+    Email: pawansankalpanew123@example.com
+    GitHub: @PawanSankalpa
 
 
 
 
+-----------------------------------------------------------------------------------
 
 
 
+## 🧠 Application Logic – Flag Quiz
 
-Application Logic – Flag Quiz
-Data Handling:
+### 🎯 Data Handling
 
-Initialize totalScore to 0.
+- `totalScore` starts at **0**.
+- An empty array called `availableQuestions` holds the remaining questions for the current session.
 
-Initialize an empty array called availableQuestions.
+---
 
-Function: loadQuestions()
+### 🔄 Function: `loadQuestions()`
 
-This function retrieves all question data from the database and populates the availableQuestions array.
+- Fetches all flags from the database.
+- Stores them in the `availableQuestions` array.
+- This function is also used to **refresh** the questions when the user runs out.
 
-It is used to refresh the question pool when all available questions have been answered.
+---
 
-Function: getRandomQuestion()
+### 🎲 Function: `getRandomQuestion()`
 
-This function selects and returns a random question from the availableQuestions array.
+- Picks a **random question** from `availableQuestions`.
+- Removes the selected question from the array to avoid repetition.
+- If all questions are used, it:
+  - Calls `loadQuestions()` to reload them.
+  - Resets `totalScore` to 0.
 
-If the array is empty (i.e., the user has answered all questions), it automatically calls loadQuestions() to repopulate the list.
+---
 
-Route: GET /
+### 📥 Route: GET `/`
 
-When the user accesses the root route, a random question is selected using getRandomQuestion().
+- When the user opens the homepage:
+  - A random flag is picked using `getRandomQuestion()`.
+  - The `index.ejs` template is rendered with:
+    - `flag`: the flag emoji or image
+    - `name`: country name (used internally)
+    - `id`: flag ID
+    - `score`: user's current score
 
-The index.ejs view is rendered with the following data:
+---
 
-name of the country
+### ✅ Route: POST `/submit`
 
-flag (flag image or description)
+- Triggered when the user submits their answer.
+- Retrieves:
+  - `answerInput`: what the user typed
+  - `answerId`: the ID of the flag shown
 
-id of the question
+- Checks the correct answer from the database using the ID.
+- Compares the user's answer with the correct one:
+  - **If correct**: increase `totalScore` by 1.
+  - **If wrong**: reset `totalScore` to 0 and reload all questions.
 
-totalScore
+- Then a **new random flag** is selected and sent to the frontend with the updated score.
 
-Route: POST /submit
+---
 
-When the user submits an answer, the application retrieves:
+💡 _Note: I used ChatGPT to help organize this summary. It’s clearer and easier to read than my initial version!_
 
-answerInput (the user's input)
-
-answerId (the ID of the current question)
-
-Using the answerId, the corresponding question is fetched from the database.
-
-The submitted answer is compared with the correct answer (e.g., the country's name):
-
-If correct, totalScore is incremented by 1.
-
-If incorrect, totalScore is reset to 0, and the question pool is refreshed by calling loadQuestions().
-
-Regardless of the result, a new question is retrieved using getRandomQuestion() and passed to the index.ejs view, along with the updated totalScore.
-( I used chatGpt to organize my thoughts because it is much more readable than my description in this(the data handling logic part).)
