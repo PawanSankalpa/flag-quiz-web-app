@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/main.css">
+    <title>Flags Quiz</title>
+</head>
+<body>
+    <div class="container">
+        <h1 id="score">Score: <%= locals.score ? score : "0" %></h1>
+        
+        <div class="inner-box">
+
+            <!-- Loading animation inside a wrapper -->
+            <div class="loading-wrapper">
+                <div class="loading-dots">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="flag-box">
+                <h1><%= flag || "Reload the page" %></h1>
+            </div>
+            <div class="answer-box">
+                <h3>What country's flag is this?</h3>
+                <form action="/submit" method="POST">
+                    <input type="text" name="answerInput" placeholder="Your answer" autocomplete="off" autofocus>
+                    <button type="submit">Submit</button>
+                    <input type="hidden" name="answerId" value="<%= id %>">
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+<!-- for the loader -->
+    <script>
+        document.querySelector('form').addEventListener('submit', (e) => {
+            const loaderWrapper = document.querySelector('.loading-wrapper');
+            const button = e.target.querySelector('button');
+            
+            // Show loader and disable button
+            loaderWrapper.classList.add('active');
+            document.querySelector('.loading-dots').classList.add('active');
+            button.disabled = true;
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Hide loader on initial load
+            document.querySelector('.loading-wrapper').classList.remove('active');
+            document.querySelector('.loading-dots').classList.remove('active');
+            document.querySelector('button').disabled = false;
+        });
+
+    </script>
+</body>
+</html>
